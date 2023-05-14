@@ -7,6 +7,10 @@ import commentRoutes from "./routes/comments.js"
 import userRoutes from "./routes/users.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import multer from "multer"
+
+import { storage } from "./cloudinary/index.js"
+
 const app = express();
 
 // middlewares
@@ -22,6 +26,12 @@ app.use(cors(
 ))
 app.use(cookieParser())
 
+const upload = multer({ storage });
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  const file = req.file;
+  res.status(200).json(file.path);
+})
 
 
 app.use("/api/auth", authRoutes);
